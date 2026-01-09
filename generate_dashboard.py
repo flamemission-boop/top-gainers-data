@@ -6,7 +6,8 @@ from collections import defaultdict
 DATA_DIR = "data"
 STOCKS_FILE = os.path.join(DATA_DIR, "stocks_data.csv")
 INDUSTRY_FILE = os.path.join(DATA_DIR, "industry_data.csv")
-OUTPUT_FILE = os.path.join(DATA_DIR, "dashboard.html")
+DOCS_DIR = "docs"
+OUTPUT_FILE = os.path.join(DOCS_DIR, "index.html")
 
 
 def load_stocks_data():
@@ -136,6 +137,7 @@ def generate_dashboard():
     
     html = generate_html(stocks_json, industries_json, min_date, max_date, len(stocks_data))
     
+    os.makedirs(DOCS_DIR, exist_ok=True)
     with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
         f.write(html)
     
