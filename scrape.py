@@ -38,7 +38,7 @@ def scrape():
             for row in rows:
                 cells = row.locator("td").all()
                 if len(cells) >= 2:
-                    name_cell = cells[0]
+                    name_cell = cells[1]
                     link = name_cell.locator("a").first
                     stock_name = link.inner_text().strip() if link.count() > 0 else name_cell.inner_text().strip()
                     
