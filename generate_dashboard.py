@@ -72,12 +72,13 @@ def get_stock_counts(stocks_data):
     return sorted(result, key=lambda x: x["count"], reverse=True)
 
 
-def get_industry_totals(stocks_data):
+def get_industry_totals(industry_data):
     counts = defaultdict(int)
-    for row in stocks_data:
+    for row in industry_data:
         industry = row.get("industry", "Unknown")
+        count = int(row.get("count", 0))
         if industry:
-            counts[industry] += 1
+            counts[industry] += count
     return sorted(counts.items(), key=lambda x: x[1], reverse=True)
 
 
@@ -104,10 +105,18 @@ def generate_dashboard():
         "all": stocks_data
     }
     
+    industry_timeframes = {
+        "7d": filter_by_timeframe(industry_data, days=7),
+        "30d": filter_by_timeframe(industry_data, days=30),
+        "90d": filter_by_timeframe(industry_data, days=90),
+        "all": industry_data
+    }
+    
     stocks_json = {}
     industries_json = {}
     for key, data in timeframes.items():
         stocks_json[key] = get_stock_counts(data)
+    for key, data in industry_timeframes.items():
         industries_json[key] = get_industry_totals(data)
     
     html = generate_html(stocks_json, industries_json, min_date, max_date, len(stocks_data))
