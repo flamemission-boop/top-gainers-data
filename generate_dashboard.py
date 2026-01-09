@@ -275,35 +275,7 @@ def generate_html(stocks_json, industries_json, min_date, max_date, total_record
             margin-top: 4px;
         }}
         
-        .stats-bar {{
-            display: flex;
-            gap: 24px;
-            margin-bottom: 32px;
-            flex-wrap: wrap;
-        }}
         
-        .stat-item {{
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 16px 24px;
-            min-width: 160px;
-        }}
-        
-        .stat-label {{
-            font-size: 12px;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 4px;
-        }}
-        
-        .stat-value {{
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 24px;
-            font-weight: 600;
-            color: var(--accent-green);
-        }}
         
         .timeframe-selector {{
             display: flex;
@@ -565,20 +537,6 @@ def generate_html(stocks_json, industries_json, min_date, max_date, total_record
             </div>
         </header>
         
-        <div class="stats-bar">
-            <div class="stat-item">
-                <div class="stat-label">Total Records</div>
-                <div class="stat-value" id="total-records">{total_records}</div>
-            </div>
-            <div class="stat-item">
-                <div class="stat-label">Date Range</div>
-                <div class="stat-value" style="font-size: 16px;" id="date-range">{min_date or 'N/A'} → {max_date or 'N/A'}</div>
-            </div>
-            <div class="stat-item">
-                <div class="stat-label">Unique Stocks</div>
-                <div class="stat-value" id="unique-stocks">{len(stocks_json.get('all', []))}</div>
-            </div>
-        </div>
         
         <div class="timeframe-selector">
             <button class="timeframe-btn" data-tf="1w">1W</button>
