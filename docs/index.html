@@ -387,11 +387,11 @@
         <div class="stats-bar">
             <div class="stat-item">
                 <div class="stat-label">Total Records</div>
-                <div class="stat-value" id="total-records">45</div>
+                <div class="stat-value" id="total-records">15</div>
             </div>
             <div class="stat-item">
                 <div class="stat-label">Date Range</div>
-                <div class="stat-value" style="font-size: 16px;" id="date-range">2026-01-09 → 2026-01-09</div>
+                <div class="stat-value" style="font-size: 16px;" id="date-range">N/A → N/A</div>
             </div>
             <div class="stat-item">
                 <div class="stat-label">Unique Stocks</div>
@@ -436,7 +436,7 @@
     
     <script>
         const stocksData = {"7d": [], "30d": [], "90d": [], "all": []};
-        const industriesData = {"7d": [["Non - Ferrous Metals", 8], ["Aerospace & Defense", 8], ["Cement & Cement Products", 4], ["Personal Products", 4], ["Food Products", 4], ["Textiles & Apparels", 4], ["Industrial Products", 4], ["Diversified FMCG", 4], ["Chemicals & Petrochemicals", 4], ["Pharmaceuticals & Biotechnology", 4], ["Commercial Services & Supplies", 4], ["Automobiles", 4], ["Transport Infrastructure", 4]], "30d": [["Non - Ferrous Metals", 8], ["Aerospace & Defense", 8], ["Cement & Cement Products", 4], ["Personal Products", 4], ["Food Products", 4], ["Textiles & Apparels", 4], ["Industrial Products", 4], ["Diversified FMCG", 4], ["Chemicals & Petrochemicals", 4], ["Pharmaceuticals & Biotechnology", 4], ["Commercial Services & Supplies", 4], ["Automobiles", 4], ["Transport Infrastructure", 4]], "90d": [["Non - Ferrous Metals", 8], ["Aerospace & Defense", 8], ["Cement & Cement Products", 4], ["Personal Products", 4], ["Food Products", 4], ["Textiles & Apparels", 4], ["Industrial Products", 4], ["Diversified FMCG", 4], ["Chemicals & Petrochemicals", 4], ["Pharmaceuticals & Biotechnology", 4], ["Commercial Services & Supplies", 4], ["Automobiles", 4], ["Transport Infrastructure", 4]], "all": [["Non - Ferrous Metals", 8], ["Aerospace & Defense", 8], ["Cement & Cement Products", 4], ["Personal Products", 4], ["Food Products", 4], ["Textiles & Apparels", 4], ["Industrial Products", 4], ["Diversified FMCG", 4], ["Chemicals & Petrochemicals", 4], ["Pharmaceuticals & Biotechnology", 4], ["Commercial Services & Supplies", 4], ["Automobiles", 4], ["Transport Infrastructure", 4]]};
+        const industriesData = {"7d": [], "30d": [], "90d": [], "all": [["Unknown", 0]]};
         
         let currentTimeframe = 'all';
         let searchQuery = '';
