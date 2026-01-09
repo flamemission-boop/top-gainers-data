@@ -58,6 +58,26 @@ def filter_by_timeframe(data, days=None, start_date=None, end_date=None):
     return filtered
 
 
+def filter_by_ytd(data):
+    if not data:
+        return data
+    
+    today = datetime.now().date()
+    start_of_year = datetime(today.year, 1, 1).date()
+    
+    filtered = []
+    for row in data:
+        if "date" not in row or not row["date"]:
+            continue
+        try:
+            row_date = datetime.strptime(row["date"], "%Y-%m-%d").date()
+            if start_of_year <= row_date <= today:
+                filtered.append(row)
+        except ValueError:
+            continue
+    return filtered
+
+
 def get_stock_counts(stocks_data):
     counts = defaultdict(lambda: {"count": 0, "industries": set(), "dates": []})
     for row in stocks_data:
@@ -115,16 +135,26 @@ def generate_dashboard():
     all_industry_totals = get_industry_totals(industry_data)
     
     timeframes = {
-        "7d": filter_by_timeframe(stocks_data, days=7),
-        "30d": filter_by_timeframe(stocks_data, days=30),
-        "90d": filter_by_timeframe(stocks_data, days=90),
+        "1w": filter_by_timeframe(stocks_data, days=7),
+        "2w": filter_by_timeframe(stocks_data, days=14),
+        "3w": filter_by_timeframe(stocks_data, days=21),
+        "1m": filter_by_timeframe(stocks_data, days=30),
+        "3m": filter_by_timeframe(stocks_data, days=90),
+        "6m": filter_by_timeframe(stocks_data, days=180),
+        "ytd": filter_by_ytd(stocks_data),
+        "1y": filter_by_timeframe(stocks_data, days=365),
         "all": stocks_data
     }
     
     industry_timeframes = {
-        "7d": filter_by_timeframe(industry_data, days=7),
-        "30d": filter_by_timeframe(industry_data, days=30),
-        "90d": filter_by_timeframe(industry_data, days=90),
+        "1w": filter_by_timeframe(industry_data, days=7),
+        "2w": filter_by_timeframe(industry_data, days=14),
+        "3w": filter_by_timeframe(industry_data, days=21),
+        "1m": filter_by_timeframe(industry_data, days=30),
+        "3m": filter_by_timeframe(industry_data, days=90),
+        "6m": filter_by_timeframe(industry_data, days=180),
+        "ytd": filter_by_ytd(industry_data),
+        "1y": filter_by_timeframe(industry_data, days=365),
         "all": industry_data
     }
     
@@ -283,13 +313,14 @@ def generate_html(stocks_json, industries_json, min_date, max_date, total_record
             padding: 6px;
             border-radius: 12px;
             width: fit-content;
+            flex-wrap: wrap;
         }}
         
         .timeframe-btn {{
             font-family: 'JetBrains Mono', monospace;
             font-size: 13px;
             font-weight: 500;
-            padding: 10px 20px;
+            padding: 10px 16px;
             border: none;
             background: transparent;
             color: var(--text-secondary);
@@ -550,10 +581,15 @@ def generate_html(stocks_json, industries_json, min_date, max_date, total_record
         </div>
         
         <div class="timeframe-selector">
-            <button class="timeframe-btn" data-tf="7d">7 Days</button>
-            <button class="timeframe-btn" data-tf="30d">30 Days</button>
-            <button class="timeframe-btn" data-tf="90d">90 Days</button>
-            <button class="timeframe-btn active" data-tf="all">All Time</button>
+            <button class="timeframe-btn" data-tf="1w">1W</button>
+            <button class="timeframe-btn" data-tf="2w">2W</button>
+            <button class="timeframe-btn" data-tf="3w">3W</button>
+            <button class="timeframe-btn" data-tf="1m">1M</button>
+            <button class="timeframe-btn" data-tf="3m">3M</button>
+            <button class="timeframe-btn" data-tf="6m">6M</button>
+            <button class="timeframe-btn" data-tf="ytd">YTD</button>
+            <button class="timeframe-btn" data-tf="1y">1Y</button>
+            <button class="timeframe-btn active" data-tf="all">All</button>
         </div>
         
         <div class="grid">
@@ -635,7 +671,6 @@ def generate_html(stocks_json, industries_json, min_date, max_date, total_record
                         <td class="rank ${{rankClass}}">${{idx + 1}}</td>
                         <td>
                             <div class="stock-name">${{stock.stock}}</div>
-                            <div class="stock-industry">${{stock.industry || 'N/A'}}</div>
                         </td>
                         <td><span class="count-badge">${{stock.count}}</span></td>
                         <td class="date-cell">${{stock.last_seen}}</td>
