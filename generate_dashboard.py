@@ -46,20 +46,28 @@ def filter_by_timeframe(data, days=None, start_date=None, end_date=None):
     
     filtered = []
     for row in data:
-        row_date = datetime.strptime(row["date"], "%Y-%m-%d").date()
-        if start <= row_date <= end:
-            filtered.append(row)
+        if "date" not in row or not row["date"]:
+            continue
+        try:
+            row_date = datetime.strptime(row["date"], "%Y-%m-%d").date()
+            if start <= row_date <= end:
+                filtered.append(row)
+        except ValueError:
+            continue
     return filtered
 
 
 def get_stock_counts(stocks_data):
     counts = defaultdict(lambda: {"count": 0, "industries": set(), "dates": []})
     for row in stocks_data:
-        stock = row["stock"]
+        stock = row.get("stock", "")
+        if not stock:
+            continue
         counts[stock]["count"] += 1
         if row.get("industry"):
             counts[stock]["industries"].add(row["industry"])
-        counts[stock]["dates"].append(row["date"])
+        if row.get("date"):
+            counts[stock]["dates"].append(row["date"])
     
     result = []
     for stock, data in counts.items():
@@ -85,7 +93,12 @@ def get_industry_totals(industry_data):
 def get_date_range(data):
     if not data:
         return None, None
-    dates = [row["date"] for row in data]
+    dates = []
+    for row in data:
+        if "date" in row and row["date"]:
+            dates.append(row["date"])
+    if not dates:
+        return None, None
     return min(dates), max(dates)
 
 
@@ -94,9 +107,11 @@ def generate_dashboard():
     industry_data = load_industry_data()
     
     min_date, max_date = get_date_range(stocks_data)
+    if min_date is None:
+        min_date, max_date = get_date_range(industry_data)
     
     all_stock_counts = get_stock_counts(stocks_data)
-    all_industry_totals = get_industry_totals(stocks_data)
+    all_industry_totals = get_industry_totals(industry_data)
     
     timeframes = {
         "7d": filter_by_timeframe(stocks_data, days=7),
