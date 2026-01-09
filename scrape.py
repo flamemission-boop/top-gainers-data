@@ -42,16 +42,8 @@ def scrape():
                     link = name_cell.locator("a").first
                     stock_name = link.inner_text().strip() if link.count() > 0 else name_cell.inner_text().strip()
                     
-                    industry = ""
-                    if len(cells) >= 7:
-                        industry = cells[6].inner_text().strip()
-                    
-                    change_pct = ""
-                    if len(cells) >= 5:
-                        change_pct = cells[4].inner_text().strip().replace("%", "")
-                    
                     if stock_name:
-                        stocks_rows.append([TODAY, stock_name, industry, change_pct])
+                        stocks_rows.append([TODAY, stock_name])
         except Exception as e:
             page.screenshot(path="debug_stocks_screenshot.png")
             print(f"Warning: Could not scrape stocks table: {str(e)}")
@@ -98,7 +90,7 @@ def scrape():
             with open(STOCKS_FILE, "a", newline="", encoding="utf-8") as f:
                 writer = csv.writer(f)
                 if not stocks_exists:
-                    writer.writerow(["date", "stock", "industry", "change_pct"])
+                    writer.writerow(["date", "stock"])
                 writer.writerows(stocks_rows)
             print(f"Saved {len(stocks_rows)} stocks to {STOCKS_FILE}")
         
