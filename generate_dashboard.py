@@ -380,7 +380,7 @@ def generate_html(stocks_json, industries_json, min_date, max_date, total_record
         }}
         
         .table-container {{
-            max-height: 600px;
+            max-height: 930px;
             overflow-y: auto;
         }}
         
