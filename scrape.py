@@ -32,18 +32,29 @@ def scrape():
         stocks_rows = []
         try:
             page.wait_for_selector("table", timeout=15000)
-            table = page.locator("table").first
-            rows = table.locator("tbody tr").all()
             
-            for row in rows:
-                cells = row.locator("td").all()
-                if len(cells) >= 2:
-                    name_cell = cells[1]
-                    link = name_cell.locator("a").first
-                    stock_name = link.inner_text().strip() if link.count() > 0 else name_cell.inner_text().strip()
+            while True:
+                table = page.locator("table").first
+                rows = table.locator("tbody tr").all()
+                
+                for row in rows:
+                    cells = row.locator("td").all()
+                    if len(cells) >= 2:
+                        name_cell = cells[1]
+                        link = name_cell.locator("a").first
+                        stock_name = link.inner_text().strip() if link.count() > 0 else name_cell.inner_text().strip()
+                        
+                        if stock_name:
+                            stocks_rows.append([TODAY, stock_name])
+                
+                next_button = page.locator("a:has-text('Next')").first
+                if next_button.count() > 0 and next_button.is_visible():
+                    next_button.click()
+                    page.wait_for_load_state("networkidle")
+                    page.wait_for_timeout(1000)
+                else:
+                    break
                     
-                    if stock_name:
-                        stocks_rows.append([TODAY, stock_name])
         except Exception as e:
             page.screenshot(path="debug_stocks_screenshot.png")
             print(f"Warning: Could not scrape stocks table: {str(e)}")
@@ -95,6 +106,5 @@ def scrape():
             print(f"Saved {len(stocks_rows)} stocks to {STOCKS_FILE}")
         
         print(f"Saved {len(industry_rows)} industries to {DATA_FILE}")
-
 if __name__ == "__main__":
     scrape()
